@@ -41,6 +41,13 @@
     --primaryColor: #a1887f;
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
     background-color: var(--bgColor);
@@ -151,6 +158,13 @@ div.word {
     color: #f55;
 }
 
+
+.container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
 @keyframes blink {
     0% {
         opacity: 1;
@@ -230,8 +244,14 @@ div.word {
 
 /* Footer */
 footer {
+    margin: 10px;
+    /* border: 1px solid var(--primaryColor); */
     text-align: center;
     padding: 1em 0;
     background-color: var(--bgColor);
     color: var(--textPrimary);
+}
+
+footer p{
+    font-size: 15px;
 }

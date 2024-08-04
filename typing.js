@@ -3,7 +3,6 @@ const wordsCount = words.length;
 const gameTime = 30 * 1000;
 let timer = null;
 let gameStart = null;
-let pauseTime = 0;
 
 function addClass(el, ...names) {
   el.classList.add(...names);
@@ -35,12 +34,13 @@ function newGame() {
   removeClass(document.getElementById('game'), 'over');
   timer = null;
   updateWordColors();
+  updateCursor();
 }
 
 function getWpm() {
   const words = [...document.querySelectorAll('.word')];
   const lastTypedWord = document.querySelector('.word.current');
-  const lastTypedWordIndex = words.indexOf(lastTypedWord) + 1;
+  const lastTypedWordIndex = words.indexOf(lastTypedWord);
   const typedWords = words.slice(0, lastTypedWordIndex);
   const correctWords = typedWords.filter(word => {
     const letters = [...word.children];
@@ -61,6 +61,7 @@ function gameOver() {
 function updateWordColors() {
   const words = document.querySelectorAll('.word');
   let foundCurrent = false;
+  let wordCount = 0;
 
   words.forEach((word) => {
     if (word.classList.contains('current')) {
@@ -68,13 +69,25 @@ function updateWordColors() {
       word.classList.add('current');
       word.classList.remove('typed', 'upcoming');
     } else if (foundCurrent) {
-      word.classList.add('upcoming');
+      if (wordCount >= 1) {  // Only add 'upcoming' class after the first word
+        word.classList.add('upcoming');
+      }
       word.classList.remove('typed', 'current');
     } else {
       word.classList.add('typed');
       word.classList.remove('current', 'upcoming');
     }
+    wordCount++;
   });
+}
+
+function updateCursor() {
+  const currentWord = document.querySelector('.word.current');
+  const currentLetter = currentWord.querySelector('.letter.current') || currentWord.querySelector('.letter');
+  const cursor = document.getElementById('cursor');
+  const rect = currentLetter.getBoundingClientRect();
+  cursor.style.top = `${rect.top + 2}px`;
+  cursor.style.left = `${rect.left}px`;
 }
 
 function handleKeyUp(ev) {
@@ -92,18 +105,7 @@ function handleKeyUp(ev) {
   }
 
   if (!timer && isLetter) {
-    gameStart = Date.now();
-    timer = setInterval(() => {
-      const currentTime = Date.now();
-      const msPassed = currentTime - gameStart;
-      const sPassed = Math.round(msPassed / 1000);
-      const sLeft = Math.round((gameTime / 1000) - sPassed);
-      if (sLeft <= 0) {
-        gameOver();
-        return;
-      }
-      document.getElementById('info').textContent = sLeft.toString();
-    }, 1000);
+    startTimer();
   }
 
   if (isLetter) {
@@ -113,11 +115,6 @@ function handleKeyUp(ev) {
       if (currentLetter.nextSibling) {
         addClass(currentLetter.nextSibling, 'current');
       }
-    } else {
-      const incorrectLetter = document.createElement('span');
-      incorrectLetter.textContent = key;
-      addClass(incorrectLetter, 'letter', 'incorrect', 'extra');
-      currentWord.appendChild(incorrectLetter);
     }
   }
 
@@ -137,16 +134,19 @@ function handleKeyUp(ev) {
 
   if (isBackspace) {
     if (currentLetter && isFirstLetter) {
+      // Move to previous word
       removeClass(currentWord, 'current');
       addClass(currentWord.previousSibling, 'current');
       removeClass(currentLetter, 'current');
       addClass(currentWord.previousSibling.lastChild, 'current');
       removeClass(currentWord.previousSibling.lastChild, 'incorrect', 'correct');
     } else if (currentLetter && !isFirstLetter) {
+      // Move to previous letter
       removeClass(currentLetter, 'current');
       addClass(currentLetter.previousSibling, 'current');
       removeClass(currentLetter.previousSibling, 'incorrect', 'correct');
     } else if (!currentLetter) {
+      // If at the end of a word, move to the last letter
       addClass(currentWord.lastChild, 'current');
       removeClass(currentWord.lastChild, 'incorrect', 'correct');
     }
@@ -159,11 +159,22 @@ function handleKeyUp(ev) {
     wordsContainer.style.marginTop = (margin - 35) + 'px';
   }
 
-  const nextLetter = document.querySelector('.letter.current');
-  const nextWord = document.querySelector('.word.current');
-  const cursor = document.getElementById('cursor');
-  cursor.style.top = `${(nextLetter || nextWord).getBoundingClientRect().top + 2}px`;
-  cursor.style.left = `${(nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left' : 'right']}px`;
+  updateCursor();
+}
+
+function startTimer() {
+  gameStart = Date.now();
+  timer = setInterval(() => {
+    const currentTime = Date.now();
+    const msPassed = currentTime - gameStart;
+    const sPassed = Math.round(msPassed / 1000);
+    const sLeft = Math.round((gameTime / 1000) - sPassed);
+    if (sLeft <= 0) {
+      gameOver();
+      return;
+    }
+    document.getElementById('info').textContent = sLeft.toString();
+  }, 1000);
 }
 
 function setTheme(theme) {
