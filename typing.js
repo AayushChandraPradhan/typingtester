@@ -34,6 +34,7 @@ function newGame() {
   document.getElementById('info').textContent = (gameTime / 1000).toString();
   removeClass(document.getElementById('game'), 'over');
   timer = null;
+  updateWordColors();
 }
 
 function getWpm() {
@@ -55,6 +56,25 @@ function gameOver() {
   addClass(document.getElementById('game'), 'over');
   const result = getWpm();
   document.getElementById('info').textContent = `WPM: ${result.toFixed(2)}`;
+}
+
+function updateWordColors() {
+  const words = document.querySelectorAll('.word');
+  let foundCurrent = false;
+
+  words.forEach((word) => {
+    if (word.classList.contains('current')) {
+      foundCurrent = true;
+      word.classList.add('current');
+      word.classList.remove('typed', 'upcoming');
+    } else if (foundCurrent) {
+      word.classList.add('upcoming');
+      word.classList.remove('typed', 'current');
+    } else {
+      word.classList.add('typed');
+      word.classList.remove('current', 'upcoming');
+    }
+  });
 }
 
 function handleKeyUp(ev) {
@@ -112,6 +132,7 @@ function handleKeyUp(ev) {
       removeClass(currentLetter, 'current');
     }
     addClass(currentWord.nextSibling.firstChild, 'current');
+    updateWordColors();
   }
 
   if (isBackspace) {
@@ -129,6 +150,7 @@ function handleKeyUp(ev) {
       addClass(currentWord.lastChild, 'current');
       removeClass(currentWord.lastChild, 'incorrect', 'correct');
     }
+    updateWordColors();
   }
 
   if (currentWord.getBoundingClientRect().top > 250) {
@@ -144,37 +166,26 @@ function handleKeyUp(ev) {
   cursor.style.left = `${(nextLetter || nextWord).getBoundingClientRect()[nextLetter ? 'left' : 'right']}px`;
 }
 
+function setTheme(theme) {
+  const root = document.documentElement;
+  root.className = ''; // Reset any existing theme class
+  if (theme !== 'default') {
+      root.classList.add(`theme-${theme}`);
+  }
+}
+
 document.getElementById('newGameBtn').addEventListener('click', () => {
   newGame();
-  document.removeEventListener('keyup', handleKeyUp); // Remove any previous event listener
-  document.addEventListener('keyup', handleKeyUp); // Add a fresh event listener
+  document.getElementById('game').focus();
 });
-
-function setTheme(theme) {
-  const root = document.documentElement;
-  root.className = ''; // Reset any existing theme class
-  if (theme !== 'default') {
-      root.classList.add(`theme-${theme}`);
-  }
-}
 
 document.getElementById('theme').addEventListener('change', (event) => {
   const selectedTheme = event.target.value;
   setTheme(selectedTheme);
 });
 
-function setTheme(theme) {
-  const root = document.documentElement;
-  root.className = ''; // Reset any existing theme class
-  if (theme !== 'default') {
-      root.classList.add(`theme-${theme}`);
-  }
-}
+document.getElementById('game').addEventListener('keyup', handleKeyUp);
 
-document.getElementById('theme').addEventListener('change', (event) => {
-  const selectedTheme = event.target.value;
-  setTheme(selectedTheme);
-});
-
+// Initialize the game
 newGame();
-document.addEventListener('keyup', handleKeyUp); // Initial event listener attachment
+document.getElementById('game').focus();
