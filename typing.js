@@ -3,6 +3,7 @@ const wordsCount = words.length;
 const gameTime = 30 * 1000;
 let timer = null;
 let gameStart = null;
+let totalMistakes = 0;
 
 function addClass(el, ...names) {
   el.classList.add(...names);
@@ -23,6 +24,7 @@ function formatWord(word) {
 
 function newGame() {
   clearInterval(timer);
+  totalMistakes = 0;
   const wordsContainer = document.getElementById('words');
   wordsContainer.innerHTML = '';
   for (let i = 0; i < 200; i++) {
@@ -35,6 +37,10 @@ function newGame() {
   timer = null;
   updateWordColors();
   updateCursor();
+  
+  // Hide end screen
+  document.getElementById('end-screen').style.display = 'none';
+  document.getElementById('game').style.display = 'block';
 }
 
 function getWpm() {
@@ -54,8 +60,15 @@ function getWpm() {
 function gameOver() {
   clearInterval(timer);
   addClass(document.getElementById('game'), 'over');
-  const result = getWpm();
-  document.getElementById('info').textContent = `WPM: ${result.toFixed(2)}`;
+  const wpm = getWpm();
+  
+  // Update end screen
+  document.getElementById('final-wpm').textContent = wpm.toFixed(2);
+  document.getElementById('total-mistakes').textContent = totalMistakes;
+  
+  // Show end screen
+  document.getElementById('game').style.display = 'none';
+  document.getElementById('end-screen').style.display = 'block';
 }
 
 function updateWordColors() {
@@ -83,17 +96,28 @@ function updateWordColors() {
 
 function updateCursor() {
   const currentWord = document.querySelector('.word.current');
-  const currentLetter = currentWord.querySelector('.letter.current') || currentWord.querySelector('.letter');
+  const currentLetter = currentWord.querySelector('.letter.current');
   const cursor = document.getElementById('cursor');
-  const rect = currentLetter.getBoundingClientRect();
-  cursor.style.top = `${rect.top + 2}px`;
-  cursor.style.left = `${rect.left}px`;
+  
+  if (currentLetter) {
+    const rect = currentLetter.getBoundingClientRect();
+    cursor.style.top = `${rect.top + 2}px`;
+    cursor.style.left = `${rect.left}px`;
+  } else {
+    // If there's no current letter, place the cursor at the end of the current word
+    const lastLetter = currentWord.querySelector('.letter:last-child');
+    if (lastLetter) {
+      const rect = lastLetter.getBoundingClientRect();
+      cursor.style.top = `${rect.top + 2}px`;
+      cursor.style.left = `${rect.right}px`;
+    }
+  }
 }
 
 function handleKeyUp(ev) {
   const key = ev.key;
   const currentWord = document.querySelector('.word.current');
-  const currentLetter = document.querySelector('.letter.current');
+  const currentLetter = currentWord.querySelector('.letter.current');
   const expected = currentLetter?.textContent || ' ';
   const isLetter = key.length === 1 && key !== ' ';
   const isSpace = key === ' ';
@@ -110,6 +134,9 @@ function handleKeyUp(ev) {
 
   if (isLetter) {
     if (currentLetter) {
+      if (key !== expected) {
+        totalMistakes++;
+      }
       addClass(currentLetter, key === expected ? 'correct' : 'incorrect');
       removeClass(currentLetter, 'current');
       if (currentLetter.nextSibling) {
@@ -120,8 +147,11 @@ function handleKeyUp(ev) {
 
   if (isSpace) {
     if (expected !== ' ') {
-      const lettersToInvalidate = [...document.querySelectorAll('.word.current .letter:not(.correct)')];
-      lettersToInvalidate.forEach((letter) => addClass(letter, 'incorrect'));
+      const lettersToInvalidate = [...currentWord.querySelectorAll('.letter:not(.correct)')];
+      lettersToInvalidate.forEach((letter) => {
+        addClass(letter, 'incorrect');
+        totalMistakes++;
+      });
     }
     removeClass(currentWord, 'current');
     addClass(currentWord.nextSibling, 'current');
@@ -129,7 +159,6 @@ function handleKeyUp(ev) {
       removeClass(currentLetter, 'current');
     }
     addClass(currentWord.nextSibling.firstChild, 'current');
-    updateWordColors();
   }
 
   if (isBackspace) {
@@ -138,8 +167,11 @@ function handleKeyUp(ev) {
       removeClass(currentWord, 'current');
       addClass(currentWord.previousSibling, 'current');
       removeClass(currentLetter, 'current');
-      addClass(currentWord.previousSibling.lastChild, 'current');
-      removeClass(currentWord.previousSibling.lastChild, 'incorrect', 'correct');
+      const lastLetter = currentWord.previousSibling.lastChild;
+      if (lastLetter) {
+        addClass(lastLetter, 'current');
+        removeClass(lastLetter, 'incorrect', 'correct');
+      }
     } else if (currentLetter && !isFirstLetter) {
       // Move to previous letter
       removeClass(currentLetter, 'current');
@@ -147,10 +179,12 @@ function handleKeyUp(ev) {
       removeClass(currentLetter.previousSibling, 'incorrect', 'correct');
     } else if (!currentLetter) {
       // If at the end of a word, move to the last letter
-      addClass(currentWord.lastChild, 'current');
-      removeClass(currentWord.lastChild, 'incorrect', 'correct');
+      const lastLetter = currentWord.lastChild;
+      if (lastLetter) {
+        addClass(lastLetter, 'current');
+        removeClass(lastLetter, 'incorrect', 'correct');
+      }
     }
-    updateWordColors();
   }
 
   if (currentWord.getBoundingClientRect().top > 250) {
@@ -159,6 +193,7 @@ function handleKeyUp(ev) {
     wordsContainer.style.marginTop = (margin - 35) + 'px';
   }
 
+  updateWordColors();
   updateCursor();
 }
 
@@ -185,10 +220,8 @@ function setTheme(theme) {
   }
 }
 
-document.getElementById('newGameBtn').addEventListener('click', () => {
-  newGame();
-  document.getElementById('game').focus();
-});
+document.getElementById('newGameBtn').addEventListener('click', newGame);
+document.getElementById('restart-btn').addEventListener('click', newGame);
 
 document.getElementById('theme').addEventListener('change', (event) => {
   const selectedTheme = event.target.value;

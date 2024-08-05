@@ -255,3 +255,44 @@ footer {
 footer p{
     font-size: 15px;
 }
+
+/* for end screen */
+#end-screen {
+    text-align: center;
+    padding: 20px;
+    background-color: var(--bgColor);
+    border: 2px solid var(--primaryColor);
+    border-radius: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+#end-screen h2 {
+    color: var(--primaryColor);
+    margin-bottom: 20px;
+}
+
+#end-screen p {
+    margin: 10px 0;
+    font-size: 1.2em;
+}
+
+#restart-btn {
+    margin-top: 20px;
+    font-size: 1.2em;
+    padding: 10px 20px;
+    background-color: var(--primaryColor);
+    color: var(--bgColor);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#restart-btn:hover {
+    background-color: var(--textPrimary);
+}
+
