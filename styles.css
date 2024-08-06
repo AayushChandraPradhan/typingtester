@@ -20,26 +20,13 @@
     --primaryColor: #61dafb;
 }
 
-.theme-green {
-    --bgColor: #2e7d32;
-    --textPrimary: #a5d6a7;
-    --textSecondary: #c8e6c9;
-    --primaryColor: #66bb6a;
+.theme-serika {
+    --bgColor: #e2e2e2;
+    --textPrimary: #323437;
+    --textSecondary: #646669;
+    --primaryColor: #e2b714;
 }
 
-.theme-red {
-    --bgColor: #b71c1c;
-    --textPrimary: #ef9a9a;
-    --textSecondary: #ffcdd2;
-    --primaryColor: #e57373;
-}
-
-.theme-brown {
-    --bgColor: #4e342e;
-    --textPrimary: #d7ccc8;
-    --textSecondary: #bcaaa4;
-    --primaryColor: #a1887f;
-}
 
 html, body {
     height: 100%;

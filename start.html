@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TypingTester - Start</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        #start-screen {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--bgColor);
+            border: 2px solid var(--primaryColor);
+            border-radius: 10px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+        }
+
+        #start-screen h1 {
+            color: var(--primaryColor);
+            margin-bottom: 20px;
+        }
+
+        #start-screen p {
+            margin: 10px 0;
+            font-size: 1.2em;
+            color: var(--textPrimary);
+        }
+
+        #start-btn {
+            margin-top: 20px;
+            font-size: 1.2em;
+            padding: 10px 20px;
+            background-color: var(--primaryColor);
+            color: var(--bgColor);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #start-btn:hover {
+            background-color: var(--textPrimary);
+        }
+    </style>
+</head>
+<body>
+    <div id="start-screen">
+        <h1>Welcome to TypingTester</h1>
+        <p>Test your typing speed and accuracy!</p>
+        <p>You'll have 30 seconds to type as many words as you can.</p>
+        <button id="start-btn">Start Typing Test</button>
+    </div>
+
+    <script>
+        document.getElementById('start-btn').addEventListener('click', function() {
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>
