@@ -33,7 +33,7 @@ function showScreen(screenId) {
 }
 
 function startGame() {
-  const selectedTime = document.getElementById('test-duration').value;
+  const selectedTime = document.getElementById('nav-test-duration').value;
   gameTime = parseInt(selectedTime) * 1000;
   showScreen('game-screen');
   newGame();
@@ -56,6 +56,14 @@ function newGame() {
   timer = null;
   updateWordColors();
   updateCursor();
+}
+
+// new function to handle logo click
+function goToHomeScreen() {
+  showScreen('start-screen');
+  clearInterval(timer);
+  document.getElementById('words').innerHTML = '';
+  document.getElementById('game').classList.remove('over');
 }
 
 function getWpm() {
@@ -236,7 +244,6 @@ function setTheme(theme) {
   }
 }
 
-// Event Listeners
 document.getElementById('start-btn').addEventListener('click', startGame);
 document.getElementById('newGameBtn').addEventListener('click', newGame);
 document.getElementById('restart-btn').addEventListener('click', () => {
@@ -251,9 +258,24 @@ document.getElementById('theme').addEventListener('change', (event) => {
 
 document.getElementById('game').addEventListener('keyup', handleKeyUp);
 
+// Add these new event listeners
+document.getElementById('logo').addEventListener('click', goToHomeScreen);
+
+document.getElementById('nav-test-duration').addEventListener('change', (event) => {
+  gameTime = parseInt(event.target.value) * 1000;
+  // Update the start screen time selector to match
+  document.getElementById('test-duration').value = event.target.value;
+});
+
+// Modify this event listener to update both selectors
 document.getElementById('test-duration').addEventListener('change', (event) => {
   gameTime = parseInt(event.target.value) * 1000;
+  // Update the nav time selector to match
+  document.getElementById('nav-test-duration').value = event.target.value;
 });
 
 // Initialize the app
 showScreen('start-screen');
+
+// Ensure the nav time selector is visible on all screens
+document.getElementById('nav-controls').style.display = 'flex';

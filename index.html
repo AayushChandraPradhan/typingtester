@@ -67,6 +67,34 @@
             font-size: 1.5rem;
             font-weight: bold;
             color: var(--primaryColor);
+            cursor: pointer;
+        }
+
+        #nav-controls {
+            display: flex;
+            align-items: center;
+        }
+
+        #nav-time-selector {
+            margin-right: 1rem;
+        }
+
+        #nav-time-selector, #theme-selector {
+            display: flex;
+            align-items: center;
+        }
+
+        #nav-time-selector label, #theme-selector label {
+            margin-right: 0.5rem;
+            color: var(--primaryColor);
+        }
+
+        #nav-time-selector select, #theme-selector select {
+            padding: 0.25rem;
+            background-color: var(--bgColor);
+            color: var(--textPrimary);
+            border: 1px solid var(--primaryColor);
+            border-radius: 3px;
         }
 
         #theme-selector {
@@ -101,14 +129,25 @@
 </head>
 <body>
     <nav>
-        <div class="logo">TypingTester</div>
-        <div id="theme-selector">
-            <label for="theme">Theme: </label>
-            <select id="theme">
-                <option value="default">Default</option>
-                <option value="blue">Blue</option>
-                <option value="serika">Serika</option>
-            </select>
+        <div class="logo" id="logo">TypingTester</div>
+        <div id="nav-controls">
+            <div id="nav-time-selector">
+                <label for="nav-test-duration">Time:</label>
+                <select id="nav-test-duration">
+                    <option value="15">15s</option>
+                    <option value="30" selected>30s</option>
+                    <option value="60">60s</option>
+                    <option value="120">120s</option>
+                </select>
+            </div>
+            <div id="theme-selector">
+                <label for="theme">Theme:</label>
+                <select id="theme">
+                    <option value="default">Default</option>
+                    <option value="blue">Blue</option>
+                    <option value="serika">Serika</option>
+                </select>
+            </div>
         </div>
     </nav>
 
