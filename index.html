@@ -1,12 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=yes">
     <title>TypingTester</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
+        /* Existing styles... */
         #start-screen, #game-screen, #end-screen {
             display: none;
         }
@@ -50,30 +51,84 @@
         #start-btn:hover {
             background-color: var(--textPrimary);
         }
+
+
+        /* New styles */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: var(--bgColor);
+            border-bottom: 2px solid var(--primaryColor);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primaryColor);
+        }
+
+        #theme-selector {
+            margin: 0;
+        }
+
+        #start-screen {
+            max-width: 400px;
+            width: 90%;
+        }
+
+        #time-selector {
+            margin-top: 20px;
+        }
+
+        #time-selector label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--primaryColor);
+        }
+
+        #time-selector select {
+            width: 100%;
+            padding: 5px;
+            font-size: 1rem;
+            background-color: var(--bgColor);
+            color: var(--textPrimary);
+            border: 1px solid var(--primaryColor);
+            border-radius: 5px;
+        }
     </style>
 </head>
-
 <body>
+    <nav>
+        <div class="logo">TypingTester</div>
+        <div id="theme-selector">
+            <label for="theme">Theme: </label>
+            <select id="theme">
+                <option value="default">Default</option>
+                <option value="blue">Blue</option>
+                <option value="serika">Serika</option>
+            </select>
+        </div>
+    </nav>
+
     <main>
         <div id="start-screen">
             <h1>Welcome to TypingTester</h1>
             <p>Test your typing speed and accuracy!</p>
-            <p>You'll have 30 seconds to type as many words as you can.</p>
+            <div id="time-selector">
+                <label for="test-duration">Select test duration:</label>
+                <select id="test-duration">
+                    <option value="15">15 seconds</option>
+                    <option value="30" selected>30 seconds</option>
+                    <option value="60">60 seconds</option>
+                    <option value="120">120 seconds</option>
+                </select>
+            </div>
             <button id="start-btn">Start Typing Test</button>
         </div>
 
         <div id="game-screen">
-            <h1>
-                TypingTester
-            </h1>
-            <div id="theme-selector">
-                <label for="theme">Choose Theme: </label>
-                <select id="theme">
-                    <option value="default">Default</option>
-                    <option value="blue">Blue</option>
-                    <option value="serika">Serika</option>
-                </select>
-            </div>
             <div id="header">
                 <div id="info"></div>
                 <div id="buttons">
@@ -97,9 +152,8 @@
     </main>
 
     <footer>
-       <p>Made with ❤️ by Aayush, Binayak, Khusboo</p>
+        <p>Made with ❤️ by Aayush, Binayak, Khusboo</p>
     </footer>
     <script src="typing.js"></script>
 </body>
-
 </html>
