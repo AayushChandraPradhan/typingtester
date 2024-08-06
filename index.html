@@ -6,43 +6,94 @@
     <meta name="viewport" content="width=device-width, user-scalable=yes">
     <title>TypingTester</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        #start-screen, #game-screen, #end-screen {
+            display: none;
+        }
+
+        #start-screen {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--bgColor);
+            border: 2px solid var(--primaryColor);
+            border-radius: 10px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+        }
+
+        #start-screen h1 {
+            color: var(--primaryColor);
+            margin-bottom: 20px;
+        }
+
+        #start-screen p {
+            margin: 10px 0;
+            font-size: 1.2em;
+            color: var(--textPrimary);
+        }
+
+        #start-btn {
+            margin-top: 20px;
+            font-size: 1.2em;
+            padding: 10px 20px;
+            background-color: var(--primaryColor);
+            color: var(--bgColor);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #start-btn:hover {
+            background-color: var(--textPrimary);
+        }
+    </style>
 </head>
 
 <body>
     <main>
-        <h1>
-            TypingTester
-        </h1>
-        <div id="theme-selector">
-            <label for="theme">Choose Theme: </label>
-            <select id="theme">
-                <option value="default">Default</option>
-                <option value="blue">Blue</option>
-                <option value="green">Green</option>
-                <option value="red">Red</option>
-                <option value="brown">Brown</option>
-            </select>
-        </div>
-        <div id="header">
-            <div id="info"></div>
-            <div id="buttons">
-                <button id="newGameBtn">New game</button>
-            </div>
-        </div>
-        <div id="game" tabindex="0">
-            <div id="words"></div>
-            <div id="cursor"></div>
-            <div id="focus-error">Click here to focus</div>
+        <div id="start-screen">
+            <h1>Welcome to TypingTester</h1>
+            <p>Test your typing speed and accuracy!</p>
+            <p>You'll have 30 seconds to type as many words as you can.</p>
+            <button id="start-btn">Start Typing Test</button>
         </div>
 
-        <!-- for end screen -->
-        <div id="end-screen" style="display: none;">
+        <div id="game-screen">
+            <h1>
+                TypingTester
+            </h1>
+            <div id="theme-selector">
+                <label for="theme">Choose Theme: </label>
+                <select id="theme">
+                    <option value="default">Default</option>
+                    <option value="blue">Blue</option>
+                    <option value="serika">Serika</option>
+                </select>
+            </div>
+            <div id="header">
+                <div id="info"></div>
+                <div id="buttons">
+                    <button id="newGameBtn">New game</button>
+                </div>
+            </div>
+            <div id="game" tabindex="0">
+                <div id="words"></div>
+                <div id="cursor"></div>
+                <div id="focus-error">Click here to focus</div>
+            </div>
+        </div>
+
+        <div id="end-screen">
             <h2>Game Over</h2>
             <p>Words Per Minute: <span id="final-wpm"></span></p>
+            <p>Accuracy: <span id="final-accuracy"></span>%</p>
             <p>Total Mistakes: <span id="total-mistakes"></span></p>
             <button id="restart-btn">Play Again</button>
         </div>
-
     </main>
 
     <footer>
