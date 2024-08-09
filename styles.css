@@ -283,6 +283,36 @@ footer p{
     background-color: var(--textPrimary);
 }
 
+/* Save High Score CSS PART Start*/
+#save-score-container {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid var(--primaryColor);
+    border-radius: 5px;
+}
+
+#highscore-name {
+    padding: 5px;
+    font-size: 1em;
+    margin-right: 10px;
+}
+
+#save-score {
+    padding: 5px 10px;
+    font-size: 1em;
+    background-color: var(--primaryColor);
+    color: var(--bgColor);
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#save-score:hover {
+    background-color: var(--textPrimary);
+}
+/* Save High Score CSS PART End*/
+
+
 /* High Score CSS*/
 #highscores-screen {
     text-align: center;

@@ -87,7 +87,7 @@ function calculateAccuracy() {
 let highscores = JSON.parse(localStorage.getItem('highscores')) || [];
 
 function saveHighscore(wpm, accuracy) {
-  const name = prompt("You've achieved a high score! Enter your name:");
+  const name = document.getElementById('highscore-name').value.trim();
   if (name) {
     const score = { name, wpm, accuracy, date: new Date().toISOString() };
     highscores.push(score);
@@ -139,10 +139,12 @@ function gameOver() {
   document.getElementById('total-mistakes').textContent = totalMistakes;
   
   if (highscores.length < 10 || wpm > highscores[highscores.length - 1].wpm) {
-    saveHighscore(wpm, accuracy);
+    document.getElementById('save-score-container').style.display = 'block';
   } else {
-    showScreen('end-screen');
+    document.getElementById('save-score-container').style.display = 'none';
   }
+  
+  showScreen('end-screen');
 }
 
 function updateWordColors() {
@@ -301,10 +303,10 @@ document.getElementById('restart-btn').addEventListener('click', () => {
 
 document.getElementById('view-highscores').addEventListener('click', showHighscores);
 document.getElementById('back-to-game').addEventListener('click', () => showScreen('start-screen'));
-
-document.getElementById('theme').addEventListener('change', (event) => {
-  const selectedTheme = event.target.value;
-  setTheme(selectedTheme);
+document.getElementById('save-score').addEventListener('click', () => {
+  const wpm = parseFloat(document.getElementById('final-wpm').textContent);
+  const accuracy = parseFloat(document.getElementById('final-accuracy').textContent);
+  saveHighscore(wpm, accuracy);
 });
 
 document.getElementById('game').addEventListener('keyup', handleKeyUp);
