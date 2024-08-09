@@ -283,3 +283,52 @@ footer p{
     background-color: var(--textPrimary);
 }
 
+/* High Score CSS*/
+#highscores-screen {
+    text-align: center;
+    padding: 20px;
+    background-color: var(--bgColor);
+    border: 2px solid var(--primaryColor);
+    border-radius: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    max-width: 80%;
+    width: 600px;
+}
+
+#highscores-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    color: var(--textPrimary);
+}
+
+#highscores-table th, #highscores-table td {
+    border: 1px solid var(--primaryColor);
+    padding: 8px;
+    text-align: center;
+}
+
+#highscores-table th {
+    background-color: var(--primaryColor);
+    color: var(--bgColor);
+}
+
+#view-highscores, #back-to-game {
+    margin-top: 20px;
+    font-size: 1.2em;
+    padding: 10px 20px;
+    background-color: var(--primaryColor);
+    color: var(--bgColor);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#view-highscores:hover, #back-to-game:hover {
+    background-color: var(--textPrimary);
+}

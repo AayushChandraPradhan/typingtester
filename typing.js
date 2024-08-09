@@ -27,7 +27,7 @@ function formatWord(word) {
 }
 
 function showScreen(screenId) {
-  ['start-screen', 'game-screen', 'end-screen'].forEach(id => {
+  ['start-screen', 'game-screen', 'end-screen', 'highscores-screen'].forEach(id => {
     document.getElementById(id).style.display = id === screenId ? 'block' : 'none';
   });
 }
@@ -84,6 +84,50 @@ function calculateAccuracy() {
   return ((totalCharactersTyped - totalMistakes) / totalCharactersTyped) * 100 || 0;
 }
 
+let highscores = JSON.parse(localStorage.getItem('highscores')) || [];
+
+function saveHighscore(wpm, accuracy) {
+  const name = prompt("You've achieved a high score! Enter your name:");
+  if (name) {
+    const score = { name, wpm, accuracy, date: new Date().toISOString() };
+    highscores.push(score);
+    highscores.sort((a, b) => b.wpm - a.wpm);
+    highscores = highscores.slice(0, 10); // Keep only top 10 scores
+    localStorage.setItem('highscores', JSON.stringify(highscores));
+    showHighscores();
+  }
+}
+
+function showHighscores() {
+  const highscoresHTML = highscores.map((score, index) => `
+    <tr>
+      <td>${index + 1}</td>
+      <td>${score.name}</td>
+      <td>${score.wpm.toFixed(2)}</td>
+      <td>${score.accuracy.toFixed(2)}%</td>
+      <td>${new Date(score.date).toLocaleDateString()}</td>
+    </tr>
+  `).join('');
+
+  const highscoresTable = `
+    <h2>Highscores</h2>
+    <table id="highscores-table">
+      <tr>
+        <th>Rank</th>
+        <th>Name</th>
+        <th>WPM</th>
+        <th>Accuracy</th>
+        <th>Date</th>
+      </tr>
+      ${highscoresHTML}
+    </table>
+  `;
+
+  document.getElementById('highscores').innerHTML = highscoresTable;
+  showScreen('highscores-screen');
+}
+
+
 function gameOver() {
   clearInterval(timer);
   addClass(document.getElementById('game'), 'over');
@@ -94,7 +138,11 @@ function gameOver() {
   document.getElementById('final-accuracy').textContent = accuracy.toFixed(2);
   document.getElementById('total-mistakes').textContent = totalMistakes;
   
-  showScreen('end-screen');
+  if (highscores.length < 10 || wpm > highscores[highscores.length - 1].wpm) {
+    saveHighscore(wpm, accuracy);
+  } else {
+    showScreen('end-screen');
+  }
 }
 
 function updateWordColors() {
@@ -250,6 +298,9 @@ document.getElementById('restart-btn').addEventListener('click', () => {
   showScreen('game-screen');
   newGame();
 });
+
+document.getElementById('view-highscores').addEventListener('click', showHighscores);
+document.getElementById('back-to-game').addEventListener('click', () => showScreen('start-screen'));
 
 document.getElementById('theme').addEventListener('change', (event) => {
   const selectedTheme = event.target.value;
